@@ -1,0 +1,40 @@
+name: Build GeoJSON Wrappers
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install pyinstaller geojson-validator
+      - name: Build with Pyinstaller
+        run: pyinstaller --onefile wrapper.py --name geojson-wrapper
+      - name: Upload Mac Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-binary
+          path: dist/geojson-wrapper
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install pyinstaller geojson-validator
+      - name: Build with Pyinstaller
+        run: pyinstaller --onefile wrapper.py --name geojson-wrapper
+      - name: Upload Windows Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binary
+          path: dist/geojson-wrapper.exe
